@@ -3,20 +3,9 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Dữ liệu mẫu địa điểm du lịch (dữ liệu này cần được thay thế bằng dữ liệu thực tế)
-data = {
-    'Tên địa điểm': ['Vịnh Hạ Long', 'Chùa Một Cột', 'Phong Nha - Kẻ Bàng', 'Đà Lạt'],
-    'Vị trí': ['Quảng Ninh', 'Hà Nội', 'Quảng Bình', 'Lâm Đồng'],
-    'Từ khóa': [
-        '"thăm quan", "chụp ảnh", "biển"',
-        '"văn hóa", "lịch sử", "chùa", "biển"',
-        '"khám phá", "hang động", "núi"',
-        '"hoa", "khí hậu", "nhiệt đới"'
-    ],
-}
 
-# Tạo DataFrame từ dữ liệu
-df = pd.DataFrame(data)
+
+df = pd.DataFrame()
 
 # Cấu hình Streamlit
 st.set_page_config(page_title="Vietnam Travel Recommendation System", layout="wide")
