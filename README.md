@@ -52,7 +52,7 @@ To set up the project locally, follow these steps:
 
 ## Example
 
-![Uploading Vietnam Travel Recommendation System - Google Chrome 2024-11-24 15-49-59.gif…]()
+![demo](https://github.com/user-attachments/assets/28715565-400a-4150-b6cf-87fb2da28e42)
 
 
 
