@@ -78,3 +78,9 @@ if st.button("Submit"):
         for _, row in recommendations.iterrows():
             st.write(f"- **{row['Tên địa điểm']}** (Vị trí: {row.get('Vị trí', 'Không rõ')})")
             st.write(f"  - Mô tả: {row['Mô tả']}")
+            
+            # Hiển thị ảnh với kích thước cố định (ví dụ, 300x300 pixel)
+            if pd.notna(row['Ảnh']):
+                st.image(row['Ảnh'], caption=row['Tên địa điểm'], width=500)  # Điều chỉnh chiều rộng
+            else:
+                st.write("Không có ảnh")
