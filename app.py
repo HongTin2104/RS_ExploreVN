@@ -4,8 +4,6 @@ from underthesea import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import Counter
-import numpy as np
-
 
 # Đọc dữ liệu từ file Excel
 file_path = "data.xlsx"
