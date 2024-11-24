@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from collections import Counter
 import datetime as dt
 import requests
+from googletrans import Translator
 
 # Đọc dữ liệu từ file Excel
 file_path = "data.xlsx"
@@ -53,18 +54,15 @@ def recommend_places(input_keywords, df, tfidf, num_recommendations=3):
     recommendations = df.iloc[similar_indices]
     return recommendations
 
-
-# def get_weather(city):
-#     BASE_URL = "https://api.openweathermap.org/data/3.0/weather?"
-#     API_KEY = open('api_key', 'r').read()
-#     CITY = city
-#     url = BASE_URL + "appid=" + API_KEY + "&q" + CITY
-#     response = requests.get(url).json()
 def get_weather(city):
     BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
     API_KEY = open('api_key', 'r').read().strip()
     url = BASE_URL + f"appid={API_KEY}&q={city}"
     response = requests.get(url)
+
+    # Khởi tạo đối tượng dịch
+    translator = Translator()
+    
     if response.status_code == 200:
         data = response.json()
         main = data.get('main', {})
@@ -72,17 +70,18 @@ def get_weather(city):
         temperature = main.get('temp', 0)
         celsius, _ = kelvin_to_celsius_fahrenheit(temperature)
         description = weather.get('description', 'Unknown weather')
+
+        # Dịch mô tả thời tiết
+        description_vn = translator.translate(description, src='en', dest='vi').text
         icon = weather.get('icon', None)
+        
         return {
             "temperature": round(celsius, 2),
-            "description": description.capitalize(),
+            "description": description_vn,
             "humidity": main.get('humidity', 0),
             "icon": f"http://openweathermap.org/img/wn/{icon}@2x.png" if icon else None
         }
     return None
-
-
-
 
 def kelvin_to_celsius_fahrenheit(kelvin):
     celsius = kelvin - 273.15
@@ -101,28 +100,6 @@ keyword1 = st.text_input("Keyword 1", placeholder="Enter first keyword (e.g., be
 keyword2 = st.text_input("Keyword 2", placeholder="Enter second keyword (e.g., mountain)")
 keyword3 = st.text_input("Keyword 3", placeholder="Enter third keyword (e.g., culture)")
 
-# if st.button("Submit"):
-#     if not (keyword1 and keyword2 and keyword3):
-#         st.write("Vui lòng nhập đủ 3 từ khóa.")
-#     else:
-#         # Nhập ba từ khóa từ người dùng
-#         user_keywords = [keyword1, keyword2, keyword3]
-        
-#         # Gọi hàm để gợi ý các địa điểm
-#         recommendations = recommend_places(user_keywords, df, tfidf, num_recommendations=3)
-
-#         # Hiển thị các địa điểm gợi ý
-#         st.write("### Các địa điểm gợi ý phù hợp:")
-#         for _, row in recommendations.iterrows():
-#             st.write(f"- **{row['Tên địa điểm']}** (Vị trí: {row.get('Vị trí', 'Không rõ')})")
-#             st.write(f"  - Mô tả: {row['Mô tả']}")
-            
-#             # Hiển thị ảnh với kích thước cố định (ví dụ, 300x300 pixel)
-#             if pd.notna(row['Ảnh']):
-#                 st.image(row['Ảnh'], caption=row['Tên địa điểm'],width=500)  # Điều chỉnh chiều rộng
-#             else:
-#                 st.write("Không có ảnh")
-
 if st.button("Submit"):
     if not (keyword1 and keyword2 and keyword3):
         st.write("Vui lòng nhập đủ 3 từ khóa.")
@@ -136,24 +113,38 @@ if st.button("Submit"):
         # Hiển thị các địa điểm gợi ý
         st.write("### Các địa điểm gợi ý phù hợp:")
         for _, row in recommendations.iterrows():
-            st.write(f"- **{row['Tên địa điểm']}** (Vị trí: {row.get('Vị trí', 'Không rõ')})")
-            st.write(f"  - Mô tả: {row['Mô tả']}")
-            
-            # Hiển thị thông tin thời tiết
-            if pd.notna(row['Vị trí']):
-                weather = get_weather(row['Vị trí'])
-                if weather:
-                    st.write(f"  - **Thời tiết hiện tại tại {row['Vị trí']}:**")
-                    st.write(f"    - Nhiệt độ: {weather['temperature']}°C")
-                    st.write(f"    - Mô tả: {weather['description']}")
-                    st.write(f"    - Độ ẩm: {weather['humidity']}%")
-                    if weather["icon"]:
-                        st.image(weather["icon"], width=80)  # Hiển thị icon thời tiết
+            # Tạo 3 cột cho mỗi địa điểm
+            col1, col2, col3 = st.columns([4, 4, 4])  # Cột 1 và cột 2 chia đều không gian, cột 3 để trống
+
+            # Dòng 1: Tên địa điểm
+            with col1:
+                st.markdown(f"**{row['Tên địa điểm']}** (Vị trí: {row.get('Vị trí', 'Không rõ')})")
+
+            # Dòng 2: Mô tả
+            with col1:
+                st.write(f"**Mô tả:** {row['Mô tả']}")
+
+            # Dòng 3: Hình ảnh địa điểm và thông tin thời tiết
+            with col1:
+                if pd.notna(row['Ảnh']):
+                    st.image(row['Ảnh'], caption=row['Tên địa điểm'], width=350)  # Hiển thị ảnh
                 else:
-                    st.write(f"  - Không thể lấy thông tin thời tiết cho {row['Vị trí']}.")
-            
-            # Hiển thị ảnh với kích thước cố định (ví dụ, 300x300 pixel)
-            if pd.notna(row['Ảnh']):
-                st.image(row['Ảnh'], caption=row['Tên địa điểm'], width=500)  # Điều chỉnh chiều rộng
-            else:
-                st.write("Không có ảnh")
+                    st.write("Không có ảnh")
+
+            with col2:
+                if pd.notna(row['Vị trí']):
+                    weather = get_weather(row['Vị trí'])
+                    if weather:
+                        st.write(f"**Thời tiết tại {row['Vị trí']}:**")
+                        col1, col2 = st.columns([1, 5])
+                        with col1:
+                            if weather["icon"]:
+                                st.image(weather["icon"], width=50)  # Hiển thị icon thời tiết
+                        with col2:
+                            st.write(f"- Nhiệt độ: {weather['temperature']}°C")
+                            st.write(f"- Mô tả: {weather['description']}")
+                            st.write(f"- Độ ẩm: {weather['humidity']}%")
+                    else:
+                        st.write(f"Không thể lấy thông tin thời tiết cho {row['Vị trí']}.")
+                else:
+                    st.write("Không có thông tin thời tiết.")
