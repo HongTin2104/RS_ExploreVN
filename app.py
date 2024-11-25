@@ -113,9 +113,11 @@ def kelvin_to_celsius_fahrenheit(kelvin):
 # Giao diện Streamlit
 st.set_page_config(page_title="Vietnam Travel Recommendation System", layout="wide")
 
-st.markdown("<h1 style='text-align: center; color: white;'>Vietnam Travel Recommendation System</h1>", unsafe_allow_html=True)
+# Tiêu đề lớn hơn
+st.markdown("<h1 style='text-align: center; color: white; font-size: 40px;'>Vietnam Travel Recommendation System</h1>", unsafe_allow_html=True)
 
-st.write("Nhập ba từ khóa để tìm kiếm các địa điểm du lịch tại Việt Nam phù hợp nhất.")
+# Hướng dẫn với chữ to hơn
+st.write("<h3 style='font-size: 20px;'>Nhập ba từ khóa để tìm kiếm các địa điểm du lịch tại Việt Nam phù hợp nhất.</h3>", unsafe_allow_html=True)
 
 # Các input từ người dùng
 keyword1 = st.text_input("Keyword 1", placeholder="Enter first keyword (e.g., beach)")
@@ -124,7 +126,7 @@ keyword3 = st.text_input("Keyword 3", placeholder="Enter third keyword (e.g., cu
 
 if st.button("Submit"):
     if not (keyword1 and keyword2 and keyword3):
-        st.write("Vui lòng nhập đủ 3 từ khóa.")
+        st.write("<h4 style='font-size: 18px; color: red;'>Vui lòng nhập đủ 3 từ khóa.</h4>", unsafe_allow_html=True)
     else:
         # Nhập ba từ khóa từ người dùng
         user_keywords = [keyword1, keyword2, keyword3]
@@ -132,19 +134,20 @@ if st.button("Submit"):
         # Gọi hàm để gợi ý các địa điểm
         recommendations = recommend_places(user_keywords, df, tfidf, num_recommendations=3)
 
-        # Hiển thị các địa điểm gợi ý
-        st.write("### Các địa điểm gợi ý phù hợp:")
+        # Hiển thị các địa điểm gợi ý với chữ to hơn
+        st.write("<h3 style='font-size: 22px;'>Các địa điểm gợi ý phù hợp:</h3>", unsafe_allow_html=True)
         for _, row in recommendations.iterrows():
             # Tạo 3 cột cho mỗi địa điểm
             col1, col2, col3 = st.columns([4, 4, 4])  # Cột 1 và cột 2 chia đều không gian, cột 3 để trống
 
-            # Dòng 1: Tên địa điểm
+            # Dòng 1: Tên địa điểm với chữ lớn hơn
             with col1:
-                st.markdown(f"**{row['Tên địa điểm']}** (Vị trí: {row.get('Vị trí', 'Không rõ')})")
+                st.markdown(f"<h4 style='font-size: 20px; font-weight: bold;'>{row['Tên địa điểm']}</h4>", unsafe_allow_html=True)
+                st.write(f"**Vị trí:** {row.get('Vị trí', 'Không rõ')}")
 
-            # Dòng 2: Mô tả
+            # Dòng 2: Mô tả với chữ lớn hơn
             with col1:
-                st.write(f"**Mô tả:** {row['Mô tả']}")
+                st.write(f"<p style='font-size: 18px;'><strong>Mô tả:</strong> {row['Mô tả']}</p>", unsafe_allow_html=True)
 
             # Dòng 3: Hình ảnh địa điểm và thông tin thời tiết
             with col1:
@@ -157,7 +160,7 @@ if st.button("Submit"):
                 if pd.notna(row['Vị trí']):
                     weather = get_weather(row['Vị trí'])
                     if weather:
-                        st.write(f"**Thời tiết tại {row['Vị trí']}:**")
+                        st.write(f"<h4 style='font-size: 18px;'>Thời tiết tại {row['Vị trí']}:</h4>", unsafe_allow_html=True)
                         col1, col2 = st.columns([1, 5])
                         with col1:
                             if weather["icon"]:
