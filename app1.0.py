@@ -9,7 +9,7 @@ import requests
 from googletrans import Translator
 
 # Đọc dữ liệu từ file Excel
-file_path = "DataSet.xlsx"
+file_path = "data\DataSet.xlsx"
 df = pd.read_excel(file_path)
 
 # Tách từ và đếm tần suất
@@ -125,12 +125,16 @@ keyword2 = st.text_input("Keyword 2", placeholder="Enter second keyword (e.g., m
 keyword3 = st.text_input("Keyword 3", placeholder="Enter third keyword (e.g., culture)")
 
 if st.button("Submit"):
+    # df = df.sample(frac=1).reset_index(drop=False)
+
     if not (keyword1 and keyword2 and keyword3):
         st.write("<h4 style='font-size: 18px; color: red;'>Vui lòng nhập đủ 3 từ khóa.</h4>", unsafe_allow_html=True)
     else:
+        
         # Nhập ba từ khóa từ người dùng
         user_keywords = [keyword1, keyword2, keyword3]
         
+
         # Gọi hàm để gợi ý các địa điểm
         recommendations = recommend_places(user_keywords, df, tfidf, num_recommendations=3)
 
