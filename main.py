@@ -1,23 +1,15 @@
 import streamlit as st
+from weather import get_weather
+from recommendation import recommend_places, create_tfidf_matrix
+from data_processing import load_data
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from recommendation_module import recommend_places
-from preprocessing_module import preprocess_text, create_stopwords
-from weather_module import get_weather
 
-# Đọc dữ liệu từ file Excel
+# Đọc dữ liệu
 file_path = "DataSet.xlsx"
-df = pd.read_excel(file_path)
-
-# Tạo danh sách stopwords từ DataFrame
-vietnamese_stopwords = create_stopwords(df)
-
-# Tiền xử lý mô tả trong DataFrame
-df['Mô tả sau tách'] = df['Mô tả'].apply(lambda x: preprocess_text(str(x), vietnamese_stopwords))
+df = load_data(file_path)
 
 # Tạo TF-IDF matrix từ mô tả đã xử lý
-tfidf = TfidfVectorizer()
-tfidf_matrix = tfidf.fit_transform(df['Mô tả sau tách'])
+tfidf, tfidf_matrix = create_tfidf_matrix(df)
 
 # Giao diện Streamlit
 st.set_page_config(page_title="Vietnam Travel Recommendation System", layout="wide")
@@ -43,7 +35,7 @@ if st.button("Submit"):
         # Gọi hàm để gợi ý các địa điểm
         recommendations = recommend_places(user_keywords, df, tfidf, tfidf_matrix, num_recommendations=3)
 
-        # Hiển thị các địa điểm gợi ý với chữ to hơn
+        # Hiển thị các địa điểm gợi ý
         st.write("<h3 style='font-size: 22px;'>Các địa điểm gợi ý phù hợp:</h3>", unsafe_allow_html=True)
         for _, row in recommendations.iterrows():
             # Tạo 3 cột cho mỗi địa điểm
