@@ -19,4 +19,4 @@ def recommend_places(user_input, df, tfidf, preprocess_text, num_recommendations
     indices = cosine_sim.argsort()[-num_recommendations:][::-1]
     recommendations = df.iloc[indices].copy()
     recommendations['Độ tương đồng (%)'] = (cosine_sim[indices] * 100).round(2)
-    return recommendations[['Tên địa điểm', 'Mô tả', 'Độ tương đồng (%)']]
+    return recommendations[['Tên địa điểm', 'Mô tả', 'Độ tương đồng (%)', 'Vị trí', 'Ảnh']]

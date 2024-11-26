@@ -2,6 +2,7 @@ from data_processing import load_and_process_data, preprocess_text
 from recommendation import recommend_places
 from sklearn.feature_extraction.text import TfidfVectorizer
 import streamlit as st
+from weather import get_weather  # Thêm import này để sử dụng hàm get_weather
 
 # Đọc và xử lý dữ liệu
 file_path = "data\DataSet.xlsx"
@@ -26,3 +27,18 @@ if st.button("Tìm kiếm"):
             for _, row in recommendations.iterrows():
                 st.subheader(row['Tên địa điểm'])
                 st.write(f"**Mô tả:** {row['Mô tả']}")
+                
+                # Thêm thông tin thời tiết vào phần expander
+                with st.expander("Chi tiết"):
+                    st.write(f"**Địa chỉ:** {row['Vị trí']}")
+                    # Lấy thông tin thời tiết cho địa điểm
+                    weather_info = get_weather(row['Vị trí'])
+                    
+                    if weather_info:
+                        st.write(f"**Nhiệt độ:** {weather_info['temperature']}°C")
+                        st.write(f"**Thời tiết:** {weather_info['description']}")
+                        st.write(f"**Độ ẩm:** {weather_info['humidity']}%")
+                        if weather_info['icon']:
+                            st.image(weather_info['icon'], width=50)
+                    else:
+                        st.write("Không thể lấy thông tin thời tiết cho địa điểm này.")
