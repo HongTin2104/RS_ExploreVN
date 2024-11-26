@@ -52,7 +52,7 @@ To set up the project locally, follow these steps:
 
 ## Example
 
-![demo](https://github.com/user-attachments/assets/28715565-400a-4150-b6cf-87fb2da28e42)
+![demo](https://github.com/user-attachments/assets/d88dc8a1-a247-4a49-933b-e01fb6d1bb4c)
 
 
 
