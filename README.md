@@ -52,7 +52,7 @@ To set up the project locally, follow these steps:
 
 ## Example
 
-![demov2](https://github.com/user-attachments/assets/0d15cc5a-6bb4-4e31-a543-4599712afe4f)
+![demov2](https://github.com/user-attachments/assets/48d31579-e4c0-4bf6-8612-1bf72b21025f)
 
 
 
