@@ -1,20 +1,10 @@
 import streamlit as st
-from googletrans import Translator
 import pandas as pd
 from data_processing import load_and_process_data, preprocess_text
 from recommendation import recommend_places
 from sklearn.feature_extraction.text import TfidfVectorizer
 from weather import get_weather
-
-# Hàm dịch văn bản từ tiếng Anh sang tiếng Việt
-def translate_to_vietnamese(text):
-    try:
-        translator = Translator()
-        result = translator.translate(text, src='en', dest='vi')  # Dịch từ tiếng Anh sang tiếng Việt
-        return result.text
-    except Exception as e:
-        st.error(f"Lỗi dịch văn bản: {e}")
-        return text  # Nếu có lỗi, trả lại văn bản ban đầu
+from translation import translate_to_vietnamese 
 
 # Đọc và xử lý dữ liệu
 file_path = "data/DataSet.xlsx"
@@ -56,10 +46,10 @@ if st.button("Tìm kiếm"):
                     # Cột 1: Thông tin thời tiết
                     with col1:
                         st.write(f"**Địa chỉ:** {row['Vị trí']}")
-                        
+
                         # Lấy thông tin thời tiết cho địa điểm
                         weather_info = get_weather(row['Vị trí'])
-                        
+
                         if weather_info:
                             st.write(f"**Nhiệt độ:** {weather_info['temperature']}°C")
                             st.write(f"**Thời tiết:** {weather_info['description']}")
