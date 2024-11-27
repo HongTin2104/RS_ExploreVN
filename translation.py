@@ -1,4 +1,3 @@
-# translation.py
 from googletrans import Translator
 
 # Hàm dịch văn bản từ tiếng Anh sang tiếng Việt
