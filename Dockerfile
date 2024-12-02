@@ -57,7 +57,6 @@ EXPOSE 8501
 # Lệnh mặc định khi chạy container (để chạy Streamlit app)
 CMD ["streamlit", "run", "main.py", "--server.enableCORS=false", "--server.port=8501"]
 
-
 # docker build -t vietnam-travel-recommendation-system .
 # docker run -it -p 8501:8501 --name vietnam-travel-recommendation-system vietnam-travel-recommendation-system
 # docker run vietnam-travel-recommendation-system
